@@ -10,6 +10,26 @@
 		this.addCourier = addCourier;
 		this.delCourier = delCourier;
 
+		this.getProductTypes = getProductTypes;
+		this.addProductType = addProductType;
+		this.delProductType = delProductType;
+
+		this.getProducts = getProducts;
+		this.addProduct = addProduct;
+		this.delProduct = delProduct;
+
+		this.getMarketingSources = getMarketingSources;
+		this.addMarketingSource = addMarketingSource;
+		this.delMarketingSource = delMarketingSource;
+
+		this.getRegions = getRegions;
+		this.addRegion = addRegion;
+		this.delRegion = delRegion;
+
+		this.getStreets= getStreets;
+		this.addStreet = addStreet;
+		this.delStreet = delStreet;
+
 		function getUsers(successCbk, errorCbk){
 
 			$http({
@@ -42,7 +62,7 @@
 				   'Content-Type': 'application/json',
 				},
 				data: {
-					'userEmail': $scope.userToDelete 
+					'email': $scope.userToDelete 
 				}
 			}).then(successCbk, errorCbk); 
 		}
@@ -65,7 +85,7 @@
 				},
 				data: { 
 					'courierName': $scope.courierName,
-					'userEmail': $scope.userOfCourier
+					'email': $scope.userOfCourier
 				}
 			}).then(successCbk, errorCbk); 
 		}
@@ -84,7 +104,7 @@
 			}).then(successCbk, errorCbk); 
 		}
 
-		function getProdTypes(successCbk, errorCbk){
+		function getProductTypes(successCbk, errorCbk){
 
 			$http({
 				method: 'GET',
@@ -92,7 +112,7 @@
 			}).then(successCbk, errorCbk);
 		}
 
-		function addProdType($scope, successCbk, errorCbk){
+		function addProductType($scope, successCbk, errorCbk){
 
 			$http({
 				method: 'POST',
@@ -106,7 +126,7 @@
 			}).then(successCbk, errorCbk); 
 		}
 
-		function delProdType($scope, successCbk, errorCbk){
+		function delProductType($scope, successCbk, errorCbk){
 
 			$http({
 				method: 'DELETE',
