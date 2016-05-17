@@ -1,0 +1,22 @@
+{
+  "name": "alexey",
+  "version": "1.0.0",
+  "main": "server.js",
+  "description": "alexey 1.0.0",
+  "author": "Alexey",
+  "repository": {
+    "type": "git"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "gulp": "^3.9.1",
+    "ip": "^1.1.0"
+  },
+  "license": "MIT",
+  "readme": "../README.md",
+  "devDependencies": {
+    "gulp-sass": "^2.2.0",
+    "gulp-watch": "^4.3.5"
+  }
+}

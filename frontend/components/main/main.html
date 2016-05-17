@@ -1,0 +1,822 @@
+<div class="response">
+    <h2>{{response}}</h2>
+</div>
+
+<div class="general-div">
+
+    <form name="adminForm">
+        <br>
+
+        <h1 style="margin-left: 30px">Deliveries manager</h1>
+
+        <br>
+
+        <div class="row form-inline generator">
+
+            <div class="col-md-1 generator-label">
+                <label style="float: right;">Generate random delivery</label>
+            </div>
+
+            <div class="col-md-5 generator-group">
+                <div class="row">
+                    <div class="col-md-7">
+                        <label for="user-random-delivery-dropdown">User name:</label>
+                        <select class="form-control user-random-delivery-dropdown" 
+                                ng-model="userRandomDelivery" 
+                                name="user_random_delivery_dropdown" 
+                                required>
+                            <option value="">Select user</option>
+                            <option ng-repeat="user in users">{{user}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.user_random_delivery_dropdown.$error.required">
+                           Select a user to generate delivery
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <button type="button" 
+                                ng-click="generateDelivery()" 
+                                ng-disabled="!userRandomDelivery" 
+                                class="btn btn-primary">
+                                Generate
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 reload-deliveries-label">
+                <label style="float: right;">Reload all</label>
+            </div>
+
+            <div class="col-md-5 reload-deliveries-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="user-reload-deliveries-dropdown">User name:</label>
+                        <select class="form-control user-reload-deliveries-dropdown" 
+                                ng-model="userReloadDeliveries" 
+                                name="user_reload_deliveries_dropdown" 
+                                required>
+                            <option value="">Select user</option>
+                            <option ng-repeat="user in users">{{user}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.user_reload_deliveries_dropdown.$error.required">
+                           Select a user to reload all deliveries
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="reloadDeliveries()" 
+                                ng-disabled="!userReloadDeliveries" 
+                                class="btn btn-primary user-reload-deliveries-button">
+                                Reload deliveries
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <h3 style="margin-left: 30px">Create custom delivery</h3>
+        
+        <br>
+
+        <div class="custom-delivery">
+            <div class="row form-inline user-product">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-2">
+                    <label for="custom-delivery-user-dropdown">User</label>
+                    <select class="form-control custom-delivery-user-dropdown" 
+                            ng-model="customDeliveryUser" 
+                            name="custom_delivery_user_dropdown" 
+                            required>
+                        <option value="">Select user</option>
+                        <option ng-repeat="user in users">{{user}}</option>
+                    </select>
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery_user_dropdown.$error.required">
+                       User is required
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <label for="custom-delivery-courier-dropdown">Courier name:</label>
+                    <select class="form-control custom-delivery-courier-dropdown" 
+                            ng-model="customDeliveryCourier" 
+                            name="custom_delivery_courier_dropdown" 
+                            required>
+                        <option value="">Select courier</option>
+                        <option ng-repeat="userCourier in userCouriers">{{userCourier}}</option>
+                    </select>
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery_courier_dropdown.$error.required">
+                       Select user courier
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <label>Pr. type:</label>
+                    <select class="form-control custom-delivery-product-type-dropdown" 
+                            name="custom_delivery_product_type_dropdown" 
+                            ng-model="customDeliveryProductType" 
+                            required>
+                        <option value="">Select product type</option>
+                        <option ng-repeat="prodType in prodTypes">{{prodType}}</option>
+                    </select>
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery_product_type_dropdown.$error.required">
+                       Select product type
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <label>Product:</label>
+                    <select class="form-control custom-delivery-product-dropdown" 
+                            ng-model="customDeliveryProduct" 
+                            name="custom_delivery_product_dropdown" 
+                            required>
+                        <option value="">Select product</option>
+                        <option ng-repeat="categorisedProduct in categorisedProducts">{{categorisedProduct}}</option>
+                    </select>
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery_product_dropdown.$error.required">
+                       Select product
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <label>Quantity:</label>
+                    <input type="number" 
+                           ng-init="quantity=1.00"
+                           ng-model="quantity" 
+                           class="form-control number" 
+                           id="custom_delivery_quantity" 
+                           name="custom_delivery_quantity" 
+                           min="1"
+                           max="100">
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery_quantity.$error.max">
+                       Set proper quantity from 1 to 100
+                    </p>
+                </div>
+                 <div class="col-md-1">
+                </div>
+            </div>
+            <div class="row form-inline address">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-2">
+                    <label>Region:</label>
+                    <select class="form-control custom-delivery-region-dropdown" 
+                            name="custom_delivery_region_dropdown" 
+                            ng-model="customDeliveryRegion" 
+                            required>
+                        <option value="">Select region</option>
+                        <option ng-repeat="region in regions">{{region}}</option>
+                    </select>
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery_region_dropdown.$error.required">
+                       Select region
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <label>Street:</label>
+                    <select class="form-control custom-delivery-street-dropdown" 
+                            ng-model="customDeliveryStreet" 
+                            name="custom_delivery_street_dropdown" 
+                            required>
+                        <option value="">Select street</option>
+                        <option ng-repeat="categorisedStreet in categorisedStreets">{{categorisedStreet}}</option>
+                    </select>
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery_street_dropdown.$error.required">
+                       Select street
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <label>Home:</label>
+                    <input type="number" 
+                           ng-init="home=1.00"
+                           ng-model="home" 
+                           class="form-control number" 
+                           id="home" 
+                           name="home" 
+                           min="1"
+                           max="100">
+                    <p class="help-block" 
+                       ng-show="adminForm.home.$error.max">
+                       Set proper home from 1 to 100
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <label>Building:</label>
+                    <input type="number" 
+                           ng-init="building=1.00"
+                           ng-model="building" 
+                           class="form-control number" 
+                           id="building" 
+                           name="building" 
+                           min="1"
+                           max="20">
+                    <p class="help-block" 
+                       ng-show="adminForm.building.$error.max">
+                       Set proper building from 1 to 20
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <label>Marketing source:</label>
+                    <select class="form-control custom-delivery-marketing-source" 
+                            ng-model="customDeliveryMarketingSource" 
+                            name="custom_delivery-marketing_source" 
+                            required>
+                        <option value="">Select marketing source</option>
+                        <option ng-repeat="marketingSource in marketingSources">{{marketingSource}}</option>
+                    </select>
+                    <p class="help-block" 
+                       ng-show="adminForm.custom_delivery-marketing_source.$error.required">
+                       Select marketing source
+                    </p>
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            <div class="row form-inline marketing-source">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-4">
+                    <label>Order date and time:</label>
+                    <input type="datetime-local" 
+                           ng-model="orderDateTime" 
+                           class="form-control datetime-local" 
+                           id="order_date_time" 
+                           name="order_date_time">
+                </div>
+                <div class="col-md-4">
+                    <label>Total sum:</label>
+                    <input type="text" 
+                           ng-model="totalSum" 
+                           class="form-control text" 
+                           id="total_sum" 
+                           name="total_sum" 
+                           disabled>
+                    <label>RUR</label>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" 
+                            ng-click="saveDelivery()" 
+                            ng-disabled="!customDeliveryMarketingSourcee ||
+                                         !home ||
+                                         !customDeliveryStreet ||
+                                         !customDeliveryRegion ||
+                                         !quantity ||
+                                         !customDeliveryProduct ||
+                                         !customDeliveryProductType ||
+                                         !customDeliveryCourier ||
+                                         !customDeliveryUser" 
+                            class="btn btn-primary save-delivery-button">
+                            Save delivery
+                    </button>
+                </div>
+                <div class="col-md-1">
+                </div>
+            </div>
+        </div>
+            
+        <br>
+
+        <h1 style="margin-left: 30px">Basic administration functions for Internet Store</h1>
+
+        <br>
+    
+        <div class="row form-inline user">
+
+            <div class="col-md-1 user-add-label">
+                <label style="float: right;">Add user</label>
+            </div>
+
+            <div class="col-md-6 user-add-group">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="user_name">User name:</label>
+                        <input type="text" 
+                               ng-model="userName" 
+                               class="form-control textbox" 
+                               id="user_name" 
+                               name="user_name" 
+                               placeholder="Alexey Lemberskiy" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.user_name.$error.required">
+                           User name is required
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="user_email">User e-mail:</label>
+                        <input type="email" 
+                               ng-model="email" 
+                               class="form-control textbox" 
+                               id="user_email" 
+                               name="user_email"
+                               placeholder="alember@text.ru" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.user_email.$invalid || adminForm.user_email.$required">
+                           Enter a valid email
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" 
+                                ng-click="addUser()" 
+                                ng-disabled="!email || !userName" 
+                                class="btn btn-primary">
+                                Add user
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 user-del-label">
+                <label style="float: right;">Delete user</label>
+            </div>
+
+            <div class="col-md-4 user-del-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control user-del-dropdown" 
+                                ng-model="userToDelete" 
+                                name="user_del_dropdown" 
+                                required>
+                            <option value="">Select user</option>
+                            <option ng-repeat="user in users">{{user}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.user_del_dropdown.$error.required">
+                           Select a user you want to delete
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="delUser()" 
+                                ng-disabled="!userToDelete" 
+                                class="btn btn-primary user-del-button">
+                                Delete selected user
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row form-inline courier">
+
+            <div class="col-md-1 courier-add-label">
+                <label style="float: right;">Add courier</label>
+            </div>
+
+            <div class="col-md-6 courier-add-group">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="courier_name">Courier name:</label>
+                        <input type="text" 
+                               ng-model="courierName" 
+                               class="form-control textbox" 
+                               id="courier_name" 
+                               name="courier_name" 
+                               placeholder="Ivan" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.courier_name.$error.required">
+                           Courier name is required
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <label>User name:</label>
+                        <select class="form-control courier-user-add-dropdown" 
+                                name="courier_user_add_dropdown" 
+                                ng-model="userOfCourier" 
+                                required>
+                            <option value="">Select user</option>
+                            <option ng-repeat="user in users">{{user}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.courier_user_add_dropdown.$error.required">
+                           Select user to add a courier
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" 
+                                ng-click="addCourier()" 
+                                class="btn btn-primary courier-add-button" 
+                                ng-disabled="!userOfCourier || !courierName">
+                            Add courier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 courier-del-label">
+                <label style="float: right;">Delete courier</label>
+            </div>
+
+            <div class="col-md-4 courier-del-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control courier-del-dropdown" 
+                                ng-model="courierToDelete" 
+                                name="courier_del_dropdown" 
+                                required>
+                            <option value="">Select courier</option>
+                            <option ng-repeat="courier in couriers">{{courier}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.courier_del_dropdown.$error.required">
+                           Select a courier to delete
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="delCourier()" 
+                                ng-disabled="!courierToDelete" 
+                                class="btn btn-primary courier-del-button">
+                            Delete selected courier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row form-inline product-type">
+
+            <div class="col-md-1 product-type-add-label">
+                <label style="float: right;">Add product type</label>
+            </div>
+
+            <div class="col-md-6 product-type-add-group">
+                <div class="row">
+                    <div class="col-md-10">
+                        <label for="product_type">Product type:</label>
+                        <input type="text" 
+                               ng-model="productType" 
+                               class="form-control textbox" 
+                               id="product_type" 
+                               name="product_type" 
+                               placeholder="Some food or products" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.product_type.$error.required">
+                           Product type is required
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" 
+                                ng-click="addProductType()" 
+                                ng-disabled="!productType" 
+                                class="btn btn-primary">
+                                Add pr.type
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 product-type-del-label">
+                <label style="float: right;">Delete prod. type</label>
+            </div>
+
+            <div class="col-md-4 product-type-del-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control product-type-del-dropdown" 
+                                ng-model="productTypeToDelete" 
+                                name="product_type_del_dropdown" 
+                                required>
+                            <option value="">Select product type</option>
+                            <option ng-repeat="prodType in prodTypes">{{prodType}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.product_type_del_dropdown.$error.required">
+                           Select product type to delete
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="delProductType()" 
+                                ng-disabled="!productTypeToDelete" 
+                                class="btn btn-primary product-type-del-button">
+                                Delete selected product type
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row form-inline product">
+
+            <div class="col-md-1 product-add-label">
+                <label style="float: right;">Add product</label>
+            </div>
+
+            <div class="col-md-6 product-add-group">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="product">Product:</label>
+                        <input type="text" 
+                               ng-model="product" 
+                               class="form-control textbox" 
+                               id="product" 
+                               name="product" 
+                               placeholder="Product label" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.product.$error.required">
+                           Product is required
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="price">Price, RUR:</label>
+                        <input type="text" 
+                               ng-model="price" 
+                               class="form-control textbox" 
+                               id="price" 
+                               name="price" 
+                               placeholder="999" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.price.$error.required">
+                           Price is required
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Product type:</label>
+                        <select class="form-control product-add-product-type-dropdown" 
+                                name="product_add_product_type_dropdown" 
+                                ng-model="productTypeOfProduct" 
+                                required>
+                            <option value="">Select product type</option>
+                            <option ng-repeat="prodType in prodTypes">{{prodType}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.product_add_product_type_dropdown.$error.required">
+                           Select product type
+                        </p>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" 
+                                ng-click="addProduct()" 
+                                ng-disabled="!product || !productTypeOfProduct" 
+                                class="btn btn-primary">
+                                Add pr.
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 product-del-label">
+                <label style="float: right;">Delete product</label>
+            </div>
+
+            <div class="col-md-4 product-del-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control product-del-dropdown" 
+                                ng-model="productToDelete" 
+                                name="product_del_dropdown" 
+                                required>
+                            <option value="">Select product</option>
+                            <option ng-repeat="product in products">{{product}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.product_del_dropdown.$error.required">
+                           Select product you want to delete
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="delProduct()" 
+                                ng-disabled="!productToDelete" 
+                                class="btn btn-primary product-del-button">
+                                Delete selected product
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row form-inline marketing-source">
+
+            <div class="col-md-1 marketing-source-add-label">
+                <label style="float: right;">Add marketing source</label>
+            </div>
+
+            <div class="col-md-6 marketing-source-add-group">
+                <div class="row">
+                    <div class="col-md-10">
+                        <label for="marketing-source">Marketing source:</label>
+                        <input type="text" 
+                               ng-model="marketingSource" 
+                               class="form-control textbox" 
+                               id="marketing_source" 
+                               name="marketing_source" 
+                               placeholder="vk.com, phone, friend" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.marketing_source.$error.required">
+                           Marketing source is required
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" 
+                                ng-click="addMarketingSource()" 
+                                ng-disabled="!marketingSource" 
+                                class="btn btn-primary">
+                                Add MS
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 marketing-source-del-label">
+                <label style="float: right;">Delete m. source</label>
+            </div>
+
+            <div class="col-md-4 marketing-source-del-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control marketing-source-del-dropdown" 
+                                ng-model="marketingSourceToDelete" 
+                                name="marketing_source_del_dropdown" 
+                                required>
+                            <option value="">Select marketing source</option>
+                            <option ng-repeat="marketingSource in marketingSources">{{marketingSource}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.marketing_source_del_dropdown.$error.required">
+                           Select marketing source to delete
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="delMarketingSource()" 
+                                ng-disabled="!marketingSourceToDelete" 
+                                class="btn btn-primary marketing-source-del-button">
+                                Delete selected marketing source
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row form-inline region">
+
+            <div class="col-md-1 region-add-label">
+                <label style="float: right;">Add region</label>
+            </div>
+
+            <div class="col-md-6 region-add-group">
+                <div class="row">
+                    <div class="col-md-10">
+                        <label for="region">Region:</label>
+                        <input type="text" 
+                               ng-model="region" 
+                               class="form-control textbox" 
+                               id="region" 
+                               name="region" 
+                               placeholder="Novokosino,  Lefortovo" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.region.$error.required">
+                           Region is required
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" 
+                                ng-click="addRegion()" 
+                                ng-disabled="!region" 
+                                class="btn btn-primary">
+                                Add region
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 region-del-label">
+                <label style="float: right;">Delete region</label>
+            </div>
+
+            <div class="col-md-4 region-del-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control region-del-dropdown" 
+                                ng-model="regionToDelete" 
+                                name="region_del_dropdown" 
+                                required>
+                            <option value="">Select region</option>
+                            <option ng-repeat="region in regions">{{region}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.region.$error.required">
+                           Select region you want to delete
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="delRegion()" 
+                                ng-disabled="!region" 
+                                class="btn btn-primary region-del-button">
+                                Delete selected region
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row form-inline street">
+
+            <div class="col-md-1 street-add-label">
+                <label style="float: right;">Add street</label>
+            </div>
+
+            <div class="col-md-6 street-add-group">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="street">Street:</label>
+                        <input type="text" 
+                               ng-model="street" 
+                               class="form-control textbox" 
+                               id="street" 
+                               name="street" 
+                               placeholder="Tverskaya" 
+                               required>
+                        <p class="help-block" 
+                           ng-show="adminForm.street.$error.required">
+                           Street is required
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <label>Region:</label>
+                        <select class="form-control street-add-region-dropdown" 
+                                name="street_add_region_dropdown" 
+                                ng-model="streetRegion" 
+                                required>
+                            <option value="">Select street region</option>
+                            <option ng-repeat="region in regions">{{region}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.street_add_region_dropdown.$error.required">
+                           Select region of your street
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" 
+                                ng-click="addStreet()" 
+                                ng-disabled="!streetRegion || !street" 
+                                class="btn btn-primary">
+                                Add street
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1 street-del-label">
+                <label style="float: right;">Delete street</label>
+            </div>
+
+            <div class="col-md-4 street-del-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control street-del-dropdown" 
+                                ng-model="streetToDelete" 
+                                name="street_del_dropdown" 
+                                required>
+                            <option value="">Select street</option>
+                            <option ng-repeat="street in streets">{{street}}</option>
+                        </select>
+                        <p class="help-block" 
+                           ng-show="adminForm.street_del_dropdown.$error.required">
+                           Select street you want to delete
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" 
+                                ng-click="delStreet()" 
+                                ng-disabled="!streetToDelete" 
+                                class="btn btn-primary street-del-button">
+                                Delete selected street
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
