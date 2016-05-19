@@ -26,7 +26,7 @@
                                 name="user_random_delivery_dropdown" 
                                 required>
                             <option value="">Select user</option>
-                            <option ng-repeat="user in users">{{user}}</option>
+                            <option ng-repeat="user in users">{{user.Email}}</option>
                         </select>
                         <p class="help-block" 
                            ng-show="adminForm.user_random_delivery_dropdown.$error.required">
@@ -57,7 +57,7 @@
                                 name="user_reload_deliveries_dropdown" 
                                 required>
                             <option value="">Select user</option>
-                            <option ng-repeat="user in users">{{user}}</option>
+                            <option ng-repeat="user in users">{{user.Email}}</option>
                         </select>
                         <p class="help-block" 
                            ng-show="adminForm.user_reload_deliveries_dropdown.$error.required">
@@ -91,9 +91,10 @@
                     <select class="form-control custom-delivery-user-dropdown" 
                             ng-model="customDeliveryUser" 
                             name="custom_delivery_user_dropdown" 
+                            ng-change="customDeliveryUserUpdate()"
                             required>
                         <option value="">Select user</option>
-                        <option ng-repeat="user in users">{{user}}</option>
+                        <option ng-repeat="user in users">{{user.Email}}</option>
                     </select>
                     <p class="help-block" 
                        ng-show="adminForm.custom_delivery_user_dropdown.$error.required">
@@ -107,7 +108,7 @@
                             name="custom_delivery_courier_dropdown" 
                             required>
                         <option value="">Select courier</option>
-                        <option ng-repeat="userCourier in userCouriers">{{userCourier}}</option>
+                        <option ng-repeat="categorisedCourier in categorisedCouriers">{{categorisedCourier.CourierName}}</option>
                     </select>
                     <p class="help-block" 
                        ng-show="adminForm.custom_delivery_courier_dropdown.$error.required">
@@ -119,6 +120,7 @@
                     <select class="form-control custom-delivery-product-type-dropdown" 
                             name="custom_delivery_product_type_dropdown" 
                             ng-model="customDeliveryProductType" 
+                            ng-change="customDeliveryProductsUpdate()"
                             required>
                         <option value="">Select product type</option>
                         <option ng-repeat="prodType in prodTypes">{{prodType}}</option>
@@ -133,9 +135,10 @@
                     <select class="form-control custom-delivery-product-dropdown" 
                             ng-model="customDeliveryProduct" 
                             name="custom_delivery_product_dropdown" 
+                            ng-change="productChange()"
                             required>
                         <option value="">Select product</option>
-                        <option ng-repeat="categorisedProduct in categorisedProducts">{{categorisedProduct}}</option>
+                        <option ng-repeat="categorisedProduct in categorisedProducts">{{categorisedProduct.ProductLabel}}</option>
                     </select>
                     <p class="help-block" 
                        ng-show="adminForm.custom_delivery_product_dropdown.$error.required">
@@ -150,6 +153,7 @@
                            class="form-control number" 
                            id="custom_delivery_quantity" 
                            name="custom_delivery_quantity" 
+                           ng-change="quantityChange()"
                            min="1"
                            max="100">
                     <p class="help-block" 
@@ -168,6 +172,7 @@
                     <select class="form-control custom-delivery-region-dropdown" 
                             name="custom_delivery_region_dropdown" 
                             ng-model="customDeliveryRegion" 
+                            ng-change="customDeliveryStreetsUpdate()"
                             required>
                         <option value="">Select region</option>
                         <option ng-repeat="region in regions">{{region}}</option>
@@ -184,7 +189,7 @@
                             name="custom_delivery_street_dropdown" 
                             required>
                         <option value="">Select street</option>
-                        <option ng-repeat="categorisedStreet in categorisedStreets">{{categorisedStreet}}</option>
+                        <option ng-repeat="categorisedStreet in categorisedStreets">{{categorisedStreet.StreetName}}</option>
                     </select>
                     <p class="help-block" 
                        ng-show="adminForm.custom_delivery_street_dropdown.$error.required">
@@ -225,13 +230,13 @@
                     <label>Marketing source:</label>
                     <select class="form-control custom-delivery-marketing-source" 
                             ng-model="customDeliveryMarketingSource" 
-                            name="custom_delivery-marketing_source" 
+                            name="custom_delivery_marketing_source" 
                             required>
                         <option value="">Select marketing source</option>
                         <option ng-repeat="marketingSource in marketingSources">{{marketingSource}}</option>
                     </select>
                     <p class="help-block" 
-                       ng-show="adminForm.custom_delivery-marketing_source.$error.required">
+                       ng-show="adminForm.custom_delivery_marketing_source.$error.required">
                        Select marketing source
                     </p>
                 </div>
@@ -241,15 +246,23 @@
             <div class="row form-inline marketing-source">
                 <div class="col-md-1">
                 </div>
-                <div class="col-md-4">
-                    <label>Order date and time:</label>
-                    <input type="datetime-local" 
-                           ng-model="orderDateTime" 
-                           class="form-control datetime-local" 
-                           id="order_date_time" 
-                           name="order_date_time">
+                <div class="col-md-3">
+                    <label>Order date:</label>
+                    <input type="date" 
+                           ng-model="orderDate" 
+                           class="form-control" 
+                           id="order_date" 
+                           name="order_date">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
+                    <label>Order time:</label>
+                    <input type="time" 
+                           ng-model="orderTime" 
+                           class="form-control" 
+                           id="order_time" 
+                           name="order_time">
+                </div>
+                <div class="col-md-3">
                     <label>Total sum:</label>
                     <input type="text" 
                            ng-model="totalSum" 
@@ -262,7 +275,7 @@
                 <div class="col-md-2">
                     <button type="button" 
                             ng-click="saveDelivery()" 
-                            ng-disabled="!customDeliveryMarketingSourcee ||
+                            ng-disabled="!customDeliveryMarketingSource ||
                                          !home ||
                                          !customDeliveryStreet ||
                                          !customDeliveryRegion ||
@@ -345,7 +358,7 @@
                                 name="user_del_dropdown" 
                                 required>
                             <option value="">Select user</option>
-                            <option ng-repeat="user in users">{{user}}</option>
+                            <option ng-repeat="user in users">{{user.Email}}</option>
                         </select>
                         <p class="help-block" 
                            ng-show="adminForm.user_del_dropdown.$error.required">
@@ -395,7 +408,7 @@
                                 ng-model="userOfCourier" 
                                 required>
                             <option value="">Select user</option>
-                            <option ng-repeat="user in users">{{user}}</option>
+                            <option ng-repeat="user in users">{{user.Email}}</option>
                         </select>
                         <p class="help-block" 
                            ng-show="adminForm.courier_user_add_dropdown.$error.required">
@@ -425,7 +438,7 @@
                                 name="courier_del_dropdown" 
                                 required>
                             <option value="">Select courier</option>
-                            <option ng-repeat="courier in couriers">{{courier}}</option>
+                            <option ng-repeat="courier in couriers">{{courier.CourierName}}</option>
                         </select>
                         <p class="help-block" 
                            ng-show="adminForm.courier_del_dropdown.$error.required">
@@ -587,7 +600,7 @@
                                 name="product_del_dropdown" 
                                 required>
                             <option value="">Select product</option>
-                            <option ng-repeat="product in products">{{product}}</option>
+                            <option ng-repeat="product in products">{{product.ProductLabel}}</option>
                         </select>
                         <p class="help-block" 
                            ng-show="adminForm.product_del_dropdown.$error.required">
@@ -729,7 +742,7 @@
                     <div class="col-md-6">
                         <button type="button" 
                                 ng-click="delRegion()" 
-                                ng-disabled="!region" 
+                                ng-disabled="!regionToDelete" 
                                 class="btn btn-primary region-del-button">
                                 Delete selected region
                         </button>
@@ -799,7 +812,7 @@
                                 name="street_del_dropdown" 
                                 required>
                             <option value="">Select street</option>
-                            <option ng-repeat="street in streets">{{street}}</option>
+                            <option ng-repeat="street in streets">{{street.StreetName}}</option>
                         </select>
                         <p class="help-block" 
                            ng-show="adminForm.street_del_dropdown.$error.required">

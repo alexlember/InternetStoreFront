@@ -30,6 +30,10 @@
 		this.addStreet = addStreet;
 		this.delStreet = delStreet;
 
+		this.generateDelivery = generateDelivery;
+		this.reloadDeliveries = reloadDeliveries;
+		this.saveDelivery = saveDelivery;
+
 		function getUsers(successCbk, errorCbk){
 
 			$http({
@@ -286,6 +290,59 @@
 				}
 			}).then(successCbk, errorCbk); 
 		}
+
+		function generateDelivery($scope, successCbk, errorCbk){
+
+			$http({
+				method: 'GET',
+				url: 'http://localhost:8000/internet_store/generate/',
+				headers: {
+				   'Content-Type': 'application/json',
+				},
+				data: {
+					'user': $scope.userRandomDelivery 
+				}
+			}).then(successCbk, errorCbk); 
+		}
+
+		function reloadDeliveries($scope, successCbk, errorCbk){
+
+			$http({
+				method: 'GET',
+				url: 'http://localhost:8000/internet_store/reload_deliveries/',
+				headers: {
+				   'Content-Type': 'application/json',
+				},
+				data: {
+					'street': $scope.userReloadDeliveries 
+				}
+			}).then(successCbk, errorCbk); 
+		}
+
+		function saveDelivery($scope, successCbk, errorCbk){
+
+			$http({
+				method: 'POST',
+				url: 'http://localhost:8000/internet_store/delivery/',
+				headers: {
+				   'Content-Type': 'application/json',
+				},
+				data: {
+					'user': $scope.customDeliveryUser,
+					'courier': $scope.customDeliveryCourier,
+					'productType': $scope.customDeliveryProductType,
+					'product': $scope.customDeliveryProduct,
+					'quantity': $scope.quantity,
+					'region': $scope.customDeliveryRegion,
+					'street': $scope.customDeliveryStreet,
+					'marketingSource': $scope.customDeliveryMarketingSource,
+					'home': $scope.home,
+					'building': $scope.building,
+					'deliveryDate': $scope.orderDate,
+					'deliveryTime': $scope.orderTime
+				}
+			}).then(successCbk, errorCbk); 
+		} 
 	};
 
 	HttpService.$inject = ['$http'];

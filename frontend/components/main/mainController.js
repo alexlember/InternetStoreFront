@@ -5,18 +5,24 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 	// user dropdown list with user emails.
     $scope.users = [];
-    // courier dropdown list with courier names.
+    // courier dropdown list with names of all couriers.
     $scope.couriers = [];
+    // courier dropdown list with names of couriers of specific user.
+    $scope.categorisedCouriers = [];
     // dropdown list with product types.
     $scope.prodTypes = [];
-    // dropdown list with products.
+    // dropdown list with all products.
     $scope.products = [];
+    // dropdown list with specified products of some productType.
+    $scope.categorisedProducts = [];
     // dropdown list with marketing sources.
     $scope.marketingSources = [];
     // dropdown list with regions.
     $scope.regions = [];
     // dropdown list with streets.
     $scope.streets = [];
+    // dropdown list with specified streets of some region.
+    $scope.categorisedStreets = [];
     // response for banner.
 	$scope.response = '';
 
@@ -45,6 +51,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	$scope.productTypeOfProduct ='';
 	// textbox with price of product.
 	$scope.price ='';
+	$scope.currentProductPrice = '';
 	// chosen product from delete product dropdown list.
 	$scope.productToDelete ='';
 
@@ -64,6 +71,8 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	$scope.streetRegion ='';
 	// chosen street from delete street dropdown list.
 	$scope.streetToDelete ='';
+	$scope.totalSum = 0
+
 
 	// initialization referring for page load
 	$scope.init = init;
@@ -93,6 +102,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call get users succeed');
 				$scope.users = [];
 				positiveResponse.data.forEach(extractUsers);
+				updateUserCouriers();
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get users failed');
@@ -106,9 +116,10 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call get couriers succeed');
 				$scope.couriers = [];
 				positiveResponse.data.forEach(extractCouriers);
+				updateUserCouriers();
 	  		},
 	  		function (negativeResponse) {
-	  			console.log('http call get users failed');
+	  			console.log('http call get couriers failed');
 	  		}
   		);
 	}
@@ -119,6 +130,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call get product types succeed');
 				$scope.prodTypes = [];
 				positiveResponse.data.forEach(extractProdTypes);
+				updateProducts();
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get product types failed');
@@ -132,6 +144,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call get products succeed');
 				$scope.products = [];
 				positiveResponse.data.forEach(extractProducts);
+				updateProducts();
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get products failed');
@@ -158,6 +171,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call get regions succeed');
 				$scope.regions = [];
 				positiveResponse.data.forEach(extractRegions);
+				updateStreets();
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get regions failed');
@@ -171,6 +185,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call get streets succeed');
 				$scope.streets = [];
 				positiveResponse.data.forEach(extractStreets);
+				updateStreets();
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get streets failed');
@@ -193,7 +208,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get generate failed');
-		  		if (response.status === 400) {
+		  		if (negativeResponse.status === 400) {
 	  				$scope.response = negativeResponse.data;
 		  		}
 	  		}
@@ -215,34 +230,45 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get reload failed');
-		  		if (response.status === 400) {
+		  		if (negativeResponse.status === 400) {
 	  				$scope.response = negativeResponse.data;
 		  		}
 	  		}
   		);
 	}
 
-	// Function save custom delivery to the database and upload it to DeliveryHeatMap service for selected user.
-	// User in $scope.userReloadDeliveries should not be empty.
- //    $scope.saveDelivery = function() {
+	// Function save delivery to DeliveryHeatMap for selected user.
+	// All fields in custom delivery should not be empty.
+    $scope.saveDelivery = function() {
+    	console.log('Ready to save delivery');
+    	console.log('Delivery user: ' + $scope.customDeliveryUser);
+    	console.log('Delivery courier: ' + $scope.customDeliveryCourier);
+    	console.log('Product type: ' + $scope.customDeliveryProductType);
+    	console.log('Product: ' + $scope.customDeliveryProduct);
+    	console.log('Quantity: ' + $scope.quantity);
+    	console.log('Region: ' + $scope.customDeliveryRegion);
+    	console.log('Street: ' + $scope.customDeliveryStreet);
+    	console.log('Marketing source: ' + $scope.customDeliveryMarketingSource);
+    	console.log('Home: ' + $scope.home);
+    	console.log('Building: ' + $scope.building);
+    	console.log('Delivery date: ' + $scope.orderDate);
+    	console.log('Delivery time: ' + $scope.orderTime);
 
- //    	console.log('user to reload deliveries: ' + $scope.userReloadDeliveries);
-
- //    	HttpService.reloadDeliveries(
- //    		$scope,
-	// 		function (positiveResponse) {
-	// 			console.log('http get reload succeed');
-	// 			$scope.response = lastOperation + ' all deliveries were reloaded for user \'' + $scope.userReloadDeliveries + '\'';
-	// 			$scope.userReloadDeliveries = null;
-	//   		},
-	//   		function (negativeResponse) {
-	//   			console.log('http call get reload failed');
-	// 	  		if (response.status === 400) {
-	//   				$scope.response = negativeResponse.data;
-	// 	  		}
-	//   		}
- //  		);
-	// }
+    	HttpService.saveDelivery(
+    		$scope,
+			function (positiveResponse) {
+				console.log('http post save delivery succeed');
+				$scope.response = lastOperation + ' delivery was saved for user \'' + $scope.customDeliveryUser + '\'';
+				$scope.userReloadDeliveries = null;
+	  		},
+	  		function (negativeResponse) {
+	  			console.log('http call post reload failed');
+		  		if (negativeResponse.status === 400) {
+	  				$scope.response = negativeResponse.data;
+		  		}
+	  		}
+  		);
+	}
 
 	// Function adds user to the database and to the user dropdown list.
 	// Email in $scope.email should be unique.
@@ -256,16 +282,26 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     		$scope,
 			function (positiveResponse) {
 				console.log('http call post user succeed');
-				var email = $scope.email;
-				$scope.users.push(email);
+
+				var Email = $scope.email;
+				var UserName = $scope.userName;
+				var user = new Object();
+				user.UserName = UserName;
+				user.Email = Email;			
+
+				$scope.users.push(user);
 				$scope.response = lastOperation + ' user \'' + $scope.userName + '\' with email \'' + $scope.email + '\' has been added';
 				$scope.userName = null;
 				$scope.email = null;
+				// $scope.customDeliveryUser = null;
+				// $scope.cusctomDeliveryCourier = null;
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post user failed');
-		  		if (response.status === 400) {
-	  				$scope.response = negativeResponse.data;
+		  		if (negativeResponse.status === 400) {
+		  			$scope.response = negativeResponse.data ;
+		  		} else if (negativeResponse.status === 500) {
+	  				$scope.response = 'internal server error, status 500';
 		  		}
 	  		}
   		);
@@ -282,7 +318,9 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 			function (positiveResponse) {
 				console.log('http call delete user succeed');
 
-				$scope.init();
+				$scope.getUsers = getUsers();
+				$scope.getCouriers = getCouriers();
+
 
 				$scope.response = lastOperation + ' user with email \'' + $scope.userToDelete + '\' and all his couriers has been deleted';
 				dropUserSelections();
@@ -305,16 +343,26 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     		$scope,
 			function (positiveResponse) {
 				console.log('http call post courier succeed');
-				var courierName = $scope.courierName;
-				$scope.couriers.push(courierName);
-				$scope.response = lastOperation + ' courier with name \'' + $scope.courierName + '\' has been added';
+
+				var CourierName = $scope.courierName;
+				var CourierUser = $scope.userOfCourier;
+				var courier = new Object();
+				courier.CourierName = CourierName;
+				courier.CourierUser = CourierUser;
+				$scope.couriers.push(courier);
+				updateUserCouriers();
+
+
+				$scope.response = lastOperation + ' courier with name \'' + $scope.courierName + '\' for user \'' + $scope.userOfCourier + '\ has been added';
 				$scope.courierName = null;
 				$scope.userOfCourier = null;
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post courier failed');
-		  		if (response.status === 400) {
-	  				$scope.response = negativeResponse.data;
+		  		if (negativeResponse.status === 400) {
+		  			$scope.response = negativeResponse.data ;
+		  		} else if (negativeResponse.status === 500) {
+	  				$scope.response = 'internal server error, status 500';
 		  		}
 	  		}
   		);
@@ -332,8 +380,8 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call delete courier succeed');
 
 				$scope.getCouriers = getCouriers();
-
 				$scope.response = lastOperation + ' courier with name \'' + $scope.courierToDelete + '\' has been deleted';
+
 				dropCourierSelections();
 	  		},
 	  		function (negativeResponse) {
@@ -359,8 +407,10 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post product type failed');
-		  		if (response.status === 400) {
-	  				$scope.response = negativeResponse.data;
+		  		if (negativeResponse.status === 400) {
+		  			$scope.response = negativeResponse.data ;
+		  		} else if (negativeResponse.status === 500) {
+	  				$scope.response = 'internal server error, status 500';
 		  		}
 	  		}
   		);
@@ -377,10 +427,10 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 			function (positiveResponse) {
 				console.log('http call delete product type succeed');
 
-				$scope.getProdTypes = getProdTypes();
+				$scope.getProductTypes = getProductTypes();
 				$scope.getProducts = getProducts();
 
-				$scope.response = lastOperation + ' product type with name \'' + $scope.productTypeToDelete + '\' has been deleted';
+				$scope.response = lastOperation + ' product type with name \'' + $scope.productTypeToDelete + '\' and all its products has been deleted';
 				dropProductTypeSelections();
 	  		},
 	  		function (negativeResponse) {
@@ -403,8 +453,18 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     		$scope,
 			function (positiveResponse) {
 				console.log('http call post product succeed');
-				var product = $scope.product;
-				$scope.products.push(product);
+
+				var ProductLabel = $scope.product;
+				var ProductType = $scope.productTypeOfProduct
+				var Price = $scope.price
+				
+				var p = new Object();
+				p.ProductLabel = ProductLabel;
+				p.ProductType = ProductType;
+				p.Price = Price;
+				$scope.products.push(p);
+				updateProducts();
+
 				$scope.response = lastOperation + ' product \'' + $scope.product + '\' with product type \'' + $scope.productTypeOfProduct + '\' has been added';
 				$scope.productTypeOfProduct = null;
 				$scope.product = null;
@@ -412,8 +472,10 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post user failed');
-		  		if (response.status === 400) {
-	  				$scope.response = negativeResponse.data;
+		  		if (negativeResponse.status === 400) {
+		  			$scope.response = negativeResponse.data ;
+		  		} else if (negativeResponse.status === 500) {
+	  				$scope.response = 'internal server error, status 500';
 		  		}
 	  		}
   		);
@@ -459,8 +521,10 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post marketing source failed');
-		  		if (response.status === 400) {
-	  				$scope.response = negativeResponse.data;
+		  		if (negativeResponse.status === 400) {
+		  			$scope.response = negativeResponse.data ;
+		  		} else if (negativeResponse.status === 500) {
+	  				$scope.response = 'internal server error, status 500';
 		  		}
 	  		}
   		);
@@ -505,8 +569,10 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post region failed');
-		  		if (response.status === 400) {
-	  				$scope.response = negativeResponse.data;
+		  		if (negativeResponse.status === 400) {
+		  			$scope.response = negativeResponse.data ;
+		  		} else if (negativeResponse.status === 500) {
+	  				$scope.response = 'internal server error, status 500';
 		  		}
 	  		}
   		);
@@ -526,7 +592,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				$scope.getRegions = getRegions();
 				$scope.getStreets = getStreets();
 
-				$scope.response = lastOperation + ' region \'' + $scope.regionToDelete + '\' has been deleted';
+				$scope.response = lastOperation + ' region \'' + $scope.regionToDelete + '\' and all its streets has been deleted';
 				dropRegionSelections();
 	  		},
 	  		function (negativeResponse) {
@@ -547,16 +613,25 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     		$scope,
 			function (positiveResponse) {
 				console.log('http call post street succeed');
-				var street = $scope.street;
-				$scope.street.push(street);
+
+				var StreetName = $scope.street;
+				var Region = $scope.streetRegion;
+				var s = new Object();
+				s.StreetName = StreetName;
+				s.Region = Region;
+				$scope.streets.push(s);
+				updateStreets();
 				$scope.response = lastOperation + ' street \'' + $scope.street + '\' with region \'' + $scope.streetRegion + '\' has been added';
 				$scope.streetRegion = null;
 				$scope.street = null;
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post street failed');
-		  		if (response.status === 400) {
-	  				$scope.response = negativeResponse.data;
+	  			
+		  		if (negativeResponse.status === 400) {
+		  			$scope.response = negativeResponse.data ;
+		  		} else if (negativeResponse.status === 500) {
+	  				$scope.response = 'internal server error, status 500';
 		  		}
 	  		}
   		);
@@ -573,7 +648,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 			function (positiveResponse) {
 				console.log('http call delete street succeed');
 
-				$scope.getStreets = getStreets;
+				$scope.getStreets = getStreets();
 
 				$scope.response = lastOperation + ' street \'' + $scope.streetToDelete + '\' has been deleted';
 				dropStreetSelections();
@@ -584,24 +659,108 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
   		);
     }
 
+    $scope.quantityChange = function() {
+    	$scope.totalSum = $scope.currentProductPrice * $scope.quantity;
+    }
+
+    $scope.productChange = function() {
+    	$scope.quantity = 1;
+    	if (typeof $scope.customDeliveryProduct === "undefined") {
+    		$scope.totalSum = 0;
+    	} else {
+    		$scope.categorisedProducts.forEach(extractProductPrice);
+    		$scope.totalSum = $scope.currentProductPrice;
+    	}
+    }
+
+    // Function for refresh specific products dropdown list.
+	function extractProductPrice(product, index, array) {
+		if (product.ProductLabel === $scope.customDeliveryProduct) {
+			$scope.currentProductPrice = parseFloat(product.Price);
+		}
+	}
+
+    $scope.customDeliveryUserUpdate = function() {
+		updateUserCouriers();
+	}
+
+
+	function updateUserCouriers() {
+		$scope.categorisedCouriers = [];
+		$scope.customDeliveryCourier = null;
+		$scope.couriers.forEach(extractCategorisedCouriers);
+	}
+
+	// Function for refresh specific user courier dropdown list.
+	function extractCategorisedCouriers(courier, index, array) {
+		if (courier.CourierUser === $scope.customDeliveryUser) {
+			$scope.categorisedCouriers.push(courier);
+		}
+	}
+
+	$scope.customDeliveryProductsUpdate = function() {
+		updateProducts();
+	}
+
+
+	function updateProducts() {
+		$scope.categorisedProducts = [];
+		$scope.customDeliveryProduct = null;
+		$scope.products.forEach(extractCategorisedProducts);
+	}
+
+	// Function for refresh specific products dropdown list.
+	function extractCategorisedProducts(product, index, array) {
+		if (product.ProductType === $scope.customDeliveryProductType) {
+			$scope.categorisedProducts.push(product);
+		}
+	}
+
+	$scope.customDeliveryStreetsUpdate = function() {
+		updateStreets();
+	}
+
+	function updateStreets() {
+		$scope.categorisedStreets = [];
+		$scope.customDeliveryStreet = null;
+		$scope.streets.forEach(extractCategorisedStreets);
+	}
+
+	// Function for refresh specific streets dropdown list.
+	function extractCategorisedStreets(street, index, array) {
+		if (street.Region === $scope.customDeliveryRegion) {
+			$scope.categorisedStreets.push(street);
+		}
+	}
+
     // Function for refresh user dropdown list.
     function extractUsers(user, index, array) {
-    	$scope.users.push(user.Email);
+    	var u = new Object();
+    	u.UserName = user.UserName;
+    	u.Email = user.Email;
+    	$scope.users.push(u);
 	}
 
 	// Function for refresh courier dropdown list.
 	function extractCouriers(courier, index, array) {
-    	$scope.couriers.push(courier.CourierName);
+		var c = new Object();
+    	c.CourierName = courier.CourierName;
+    	c.CourierUser = courier.CourierUser;
+    	$scope.couriers.push(c);
 	}
 
 	// Function for refresh product types from dropdown list.
 	function extractProdTypes(prodType, index, array) {
-    	$scope.prodTypes.push(prodType.ProductTypeLabel);
+    	$scope.prodTypes.push(prodType.ProductTypeName);
 	}
 
 	// Function for refresh products from dropdown list.
 	function extractProducts(product, index, array) {
-    	$scope.products.push(product.ProductLabel);
+		var p = new Object();
+    	p.ProductLabel = product.ProductLabel;
+    	p.Price = product.Price;
+    	p.ProductType = product.ProductType;
+    	$scope.products.push(p);
 	}
 
 	// Function for refresh marketing sources from dropdown list.
@@ -611,18 +770,22 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 	// Function for refresh regions from dropdown list.
 	function extractRegions(region, index, array) {
-    	$scope.regions.push(region.regionName);
+    	$scope.regions.push(region.RegionName);
 	}
 
 	// Function for refresh streets from dropdown list.
 	function extractStreets(street, index, array) {
-    	$scope.streets.push(street.streetName);
+		var s = new Object();
+    	s.StreetName = street.StreetName;
+    	s.Region = street.Region;
+    	$scope.streets.push(s);
 	}
 
 	function dropUserSelections() {
 		$scope.userRandomDelivery = null;
 		$scope.userReloadDeliveries = null;
 		$scope.customDeliveryUser = null;
+		$scope.customDeliveryCourier = null;
 		$scope.userName = null;
 		$scope.email = null;
 		$scope.userToDelete = null;
@@ -632,6 +795,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	}
 
 	function dropCourierSelections() {
+		$scope.customDeliveryCourier = null;
 		$scope.courierName = null;
 		$scope.userOfCourier = null;
 		$scope.courierToDelete = null;
@@ -646,8 +810,8 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		$scope.productToDelete = null;
 		$scope.customDeliveryProductType = null;
 		$scope.cusctomDeliveryProduct = null;
-		$scope.totalSum = null;
-		$scope.quantity = '1';
+		$scope.totalSum = 0;
+		$scope.quantity = 1;
 	}
 
 	function dropProductSelections() {
@@ -656,8 +820,8 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		$scope.productTypeOfProduct = null;
 		$scope.productToDelete = null;
 		$scope.cusctomDeliveryProduct = null;
-		$scope.totalSum = null;
-		$scope.quantity = '1';
+		$scope.totalSum = 0;
+		$scope.quantity = 1;
 	}
 
 	function dropMarketingSourceSelections() {
@@ -671,7 +835,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		$scope.regionToDelete = null;
 		$scope.street = null
 		$scope.streetRegion = null;
-		$scope.streetToDelete.streetToDelete = null;
+		$scope.streetToDelete = null;
 		$scope.customDeliveryRegion = null;
 		$scope.customDeliveryStreet = null;
 	}
@@ -679,7 +843,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	function dropStreetSelections() {
 		$scope.street = null
 		$scope.streetRegion = null;
-		$scope.streetToDelete.streetToDelete = null;
+		$scope.streetToDelete = null;
 		$scope.customDeliveryStreet = null;
 	}
 
