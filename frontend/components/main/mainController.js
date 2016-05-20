@@ -3,75 +3,77 @@
  */
 internetStoreModule.controller('mainController', ['$scope', '$state', '$http', 'HttpService', function ($scope, $state, $http, HttpService) {
 
-	// user dropdown list with user emails.
+	// user drop down list with user emails.
     $scope.users = [];
-    // courier dropdown list with names of all couriers.
+    // courier drop down list with names of all couriers.
     $scope.couriers = [];
-    // courier dropdown list with names of couriers of specific user.
+    // courier drop down list with names of couriers of specific user.
     $scope.categorisedCouriers = [];
-    // dropdown list with product types.
+    // drop down list with product types.
     $scope.prodTypes = [];
-    // dropdown list with all products.
+    // drop down list with all products.
     $scope.products = [];
-    // dropdown list with specified products of some productType.
+    // drop down list with specified products of some productType.
     $scope.categorisedProducts = [];
-    // dropdown list with marketing sources.
+    // drop down list with marketing sources.
     $scope.marketingSources = [];
-    // dropdown list with regions.
+    // drop down list with regions.
     $scope.regions = [];
-    // dropdown list with streets.
+    // drop down list with streets.
     $scope.streets = [];
-    // dropdown list with specified streets of some region.
+    // drop down list with specified streets of some region.
     $scope.categorisedStreets = [];
     // response for banner.
 	$scope.response = '';
 
-	// textbox with user name.
+	// text box with user name.
 	$scope.userName = '';
-	// textbox with user email.
-	$scope.email =''
-	// chosen user email from delete user dropdown list.
+	// text box with user email.
+	$scope.email ='';
+	// chosen user email from delete user drop down list.
 	$scope.userToDelete ='';
-	// textbox with user name.
+	// text box with user name.
 
 	$scope.courierName ='';
-	// chosen user email from add courier dropdown list.
+	// chosen user email from add courier drop down list.
 	$scope.userOfCourier ='';
-	// chosen courier name email from delete courier dropdown list.
+	// chosen courier name email from delete courier drop down list.
 	$scope.courierToDelete ='';
 
-	// textbox with product type.
-	$scope.prodType =''
-	// chosen product type from delete product types dropdown list.
+	// text box with product type.
+	$scope.prodType ='';
+	// chosen product type from delete product types drop down list.
 	$scope.productTypeToDelete ='';
 
-	// textbox with product.
-	$scope.product =''
-	// chosen product type of product from dropdown list.
+	// text box with product.
+	$scope.product ='';
+	// chosen product type of product from drop down list.
 	$scope.productTypeOfProduct ='';
-	// textbox with price of product.
+	// text box with price of product.
 	$scope.price ='';
 	$scope.currentProductPrice = '';
-	// chosen product from delete product dropdown list.
+	// chosen product from delete product drop down list.
 	$scope.productToDelete ='';
 
-	// textbox with marketing source name.
-	$scope.marketingSource =''
-	// chosen marketing source from delete dropdown list.
+	// text box with marketing source name.
+	$scope.marketingSource ='';
+	// chosen marketing source from delete drop down list.
 	$scope.marketingSourceToDelete ='';
 
-	// textbox with region name.
-	$scope.region =''
-	// chosen region from delete dropdown list.
+	// text box with region name.
+	$scope.region ='';
+	// chosen region from delete drop down list.
 	$scope.regionToDelete ='';
 
-	// textbox with street.
-	$scope.street =''
-	// chosen region of street from dropdown list.
+	// text box with street.
+	$scope.street ='';
+	// chosen region of street from drop down list.
 	$scope.streetRegion ='';
-	// chosen street from delete street dropdown list.
+	// chosen street from delete street drop down list.
 	$scope.streetToDelete ='';
-	$scope.totalSum = 0
+	$scope.totalSum = 0;
+	$scope.orderDate ='';
+	$scope.orderTime = '';
 
 
 	// initialization referring for page load
@@ -213,7 +215,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-	}
+	};
 
 	// Function reloads all deliveries to DeliveryHeatMap for selected user.
 	// User in $scope.userReloadDeliveries should not be empty.
@@ -235,7 +237,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-	}
+	};
 
 	// Function save delivery to DeliveryHeatMap for selected user.
 	// All fields in custom delivery should not be empty.
@@ -268,7 +270,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-	}
+	};
 
 	// Function adds user to the database and to the user dropdown list.
 	// Email in $scope.email should be unique.
@@ -285,7 +287,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 				var Email = $scope.email;
 				var UserName = $scope.userName;
-				var user = new Object();
+				var user = {};
 				user.UserName = UserName;
 				user.Email = Email;			
 
@@ -305,7 +307,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-	}
+	};
 
     // Function deletes selected in dropdown list user from list and database.
     // Value in dropdown list should not be empty.
@@ -329,7 +331,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  			console.log('http call delete user failed');
 	  		}
   		);
-    }
+    };
 
 	// Function adds courier to the database and to the courier dropdown list.
 	// User email in $scope.userOfCourier should not be null.
@@ -346,7 +348,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 				var CourierName = $scope.courierName;
 				var CourierUser = $scope.userOfCourier;
-				var courier = new Object();
+				var courier = {};
 				courier.CourierName = CourierName;
 				courier.CourierUser = CourierUser;
 				$scope.couriers.push(courier);
@@ -366,7 +368,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-    }
+    };
 
 	// Function deletes selected in dropdown list courier from list and database.
 	// Value in dropdown list should not be empty.
@@ -388,7 +390,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  			console.log('http call delete courier failed');
 	  		}
   		);
-    }
+    };
 
     // Function adds product type to the database and to the prodTypes dropdown list.
 	// Product type in $scope.productType should not be null and should be unique.
@@ -414,7 +416,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-    }
+    };
 
     // Function deletes selected in dropdown list product type from list and database.
 	// Value in dropdown list should not be empty.
@@ -437,7 +439,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  			console.log('http call delete product type failed');
 	  		}
   		);
-    }
+    };
 
     // Function adds product to the database and to the user dropdown list.
 	// Product type in $scope.productTypeOfProduct should not be empty.
@@ -455,10 +457,10 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				console.log('http call post product succeed');
 
 				var ProductLabel = $scope.product;
-				var ProductType = $scope.productTypeOfProduct
-				var Price = $scope.price
+				var ProductType = $scope.productTypeOfProduct;
+				var Price = $scope.price;
 				
-				var p = new Object();
+				var p = {};
 				p.ProductLabel = ProductLabel;
 				p.ProductType = ProductType;
 				p.Price = Price;
@@ -479,7 +481,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-	}
+	};
 
 	// Function deletes selected in dropdown list product from list and database.
 	// Value in dropdown list should not be empty.
@@ -501,7 +503,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  			console.log('http call delete product failed');
 	  		}
   		);
-    }
+    };
 
 
     // Function adds marketing source to the database and to the marketing source dropdown list.
@@ -528,7 +530,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-    }
+    };
 
     // Function deletes selected in dropdown list marketing source from list and database.
 	// Value in dropdown list should not be empty.
@@ -550,7 +552,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  			console.log('http call delete marketing source failed');
 	  		}
   		);
-    }
+    };
 
     // Function adds region to the database and to the regions dropdown list.
 	// Product type in $scope.region should not be null and should be unique.
@@ -576,7 +578,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-    }
+    };
 
     // Function deletes selected in dropdown list region from list and database.
 	// Value in dropdown list should not be empty.
@@ -599,7 +601,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  			console.log('http call delete region failed');
 	  		}
   		);
-    }
+    };
 
     // Function adds street to the database and to the street dropdown list.
 	// Region in $scope.streetRegion should not be empty.
@@ -616,7 +618,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 				var StreetName = $scope.street;
 				var Region = $scope.streetRegion;
-				var s = new Object();
+				var s = {};
 				s.StreetName = StreetName;
 				s.Region = Region;
 				$scope.streets.push(s);
@@ -635,7 +637,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		  		}
 	  		}
   		);
-	}
+	};
 
 	// Function deletes selected in dropdown list street from list and database.
 	// Value in dropdown list should not be empty.
@@ -657,11 +659,11 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  			console.log('http call delete street failed');
 	  		}
   		);
-    }
+    };
 
     $scope.quantityChange = function() {
     	$scope.totalSum = $scope.currentProductPrice * $scope.quantity;
-    }
+    };
 
     $scope.productChange = function() {
     	$scope.quantity = 1;
@@ -671,7 +673,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     		$scope.categorisedProducts.forEach(extractProductPrice);
     		$scope.totalSum = $scope.currentProductPrice;
     	}
-    }
+    };
 
     // Function for refresh specific products dropdown list.
 	function extractProductPrice(product, index, array) {
@@ -682,7 +684,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
     $scope.customDeliveryUserUpdate = function() {
 		updateUserCouriers();
-	}
+	};
 
 
 	function updateUserCouriers() {
@@ -700,7 +702,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 	$scope.customDeliveryProductsUpdate = function() {
 		updateProducts();
-	}
+	};
 
 
 	function updateProducts() {
@@ -718,7 +720,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 	$scope.customDeliveryStreetsUpdate = function() {
 		updateStreets();
-	}
+	};
 
 	function updateStreets() {
 		$scope.categorisedStreets = [];
@@ -735,7 +737,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
     // Function for refresh user dropdown list.
     function extractUsers(user, index, array) {
-    	var u = new Object();
+    	var u = {};
     	u.UserName = user.UserName;
     	u.Email = user.Email;
     	$scope.users.push(u);
@@ -743,7 +745,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 	// Function for refresh courier dropdown list.
 	function extractCouriers(courier, index, array) {
-		var c = new Object();
+		var c = {};
     	c.CourierName = courier.CourierName;
     	c.CourierUser = courier.CourierUser;
     	$scope.couriers.push(c);
@@ -756,7 +758,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 	// Function for refresh products from dropdown list.
 	function extractProducts(product, index, array) {
-		var p = new Object();
+		var p = {};
     	p.ProductLabel = product.ProductLabel;
     	p.Price = product.Price;
     	p.ProductType = product.ProductType;
@@ -775,7 +777,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 
 	// Function for refresh streets from dropdown list.
 	function extractStreets(street, index, array) {
-		var s = new Object();
+		var s = {};
     	s.StreetName = street.StreetName;
     	s.Region = street.Region;
     	$scope.streets.push(s);
@@ -833,7 +835,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	function dropRegionSelections() {
 		$scope.region = null;
 		$scope.regionToDelete = null;
-		$scope.street = null
+		$scope.street = null;
 		$scope.streetRegion = null;
 		$scope.streetToDelete = null;
 		$scope.customDeliveryRegion = null;
@@ -841,7 +843,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	}
 
 	function dropStreetSelections() {
-		$scope.street = null
+		$scope.street = null;
 		$scope.streetRegion = null;
 		$scope.streetToDelete = null;
 		$scope.customDeliveryStreet = null;
