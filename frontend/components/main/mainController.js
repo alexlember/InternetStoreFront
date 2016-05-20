@@ -295,8 +295,6 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 				$scope.response = lastOperation + ' user \'' + $scope.userName + '\' with email \'' + $scope.email + '\' has been added';
 				$scope.userName = null;
 				$scope.email = null;
-				// $scope.customDeliveryUser = null;
-				// $scope.cusctomDeliveryCourier = null;
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call post user failed');
@@ -639,8 +637,8 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
   		);
 	};
 
-	// Function deletes selected in dropdown list street from list and database.
-	// Value in dropdown list should not be empty.
+	// Function deletes selected in drop down list street from list and database.
+	// Value in drop down list should not be empty.
     $scope.delStreet = function() {
 
     	console.log('delete street: ' + $scope.streetToDelete);
@@ -675,7 +673,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     	}
     };
 
-    // Function for refresh specific products dropdown list.
+    // Function for refresh specific products drop down list.
 	function extractProductPrice(product, index, array) {
 		if (product.ProductLabel === $scope.customDeliveryProduct) {
 			$scope.currentProductPrice = parseFloat(product.Price);
@@ -693,7 +691,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		$scope.couriers.forEach(extractCategorisedCouriers);
 	}
 
-	// Function for refresh specific user courier dropdown list.
+	// Function for refresh specific user courier drop down list.
 	function extractCategorisedCouriers(courier, index, array) {
 		if (courier.CourierUser === $scope.customDeliveryUser) {
 			$scope.categorisedCouriers.push(courier);
@@ -711,7 +709,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		$scope.products.forEach(extractCategorisedProducts);
 	}
 
-	// Function for refresh specific products dropdown list.
+	// Function for refresh specific products drop down list.
 	function extractCategorisedProducts(product, index, array) {
 		if (product.ProductType === $scope.customDeliveryProductType) {
 			$scope.categorisedProducts.push(product);
@@ -728,14 +726,14 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 		$scope.streets.forEach(extractCategorisedStreets);
 	}
 
-	// Function for refresh specific streets dropdown list.
+	// Function for refresh specific streets drop down list.
 	function extractCategorisedStreets(street, index, array) {
 		if (street.Region === $scope.customDeliveryRegion) {
 			$scope.categorisedStreets.push(street);
 		}
 	}
 
-    // Function for refresh user dropdown list.
+    // Function for refresh user drop down list.
     function extractUsers(user, index, array) {
     	var u = {};
     	u.UserName = user.UserName;
@@ -751,12 +749,12 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     	$scope.couriers.push(c);
 	}
 
-	// Function for refresh product types from dropdown list.
+	// Function for refresh product types from drop down list.
 	function extractProdTypes(prodType, index, array) {
     	$scope.prodTypes.push(prodType.ProductTypeName);
 	}
 
-	// Function for refresh products from dropdown list.
+	// Function for refresh products from drop down list.
 	function extractProducts(product, index, array) {
 		var p = {};
     	p.ProductLabel = product.ProductLabel;
@@ -765,17 +763,17 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
     	$scope.products.push(p);
 	}
 
-	// Function for refresh marketing sources from dropdown list.
+	// Function for refresh marketing sources from drop down list.
 	function extractMarketingSources(marketingSource, index, array) {
     	$scope.marketingSources.push(marketingSource.MarketingSourceLabel);
 	}
 
-	// Function for refresh regions from dropdown list.
+	// Function for refresh regions from drop down list.
 	function extractRegions(region, index, array) {
     	$scope.regions.push(region.RegionName);
 	}
 
-	// Function for refresh streets from dropdown list.
+	// Function for refresh streets from drop down list.
 	function extractStreets(street, index, array) {
 		var s = {};
     	s.StreetName = street.StreetName;

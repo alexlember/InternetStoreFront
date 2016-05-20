@@ -294,7 +294,7 @@
 		function generateDelivery($scope, successCbk, errorCbk){
 
 			$http({
-				method: 'GET',
+				method: 'POST',
 				url: 'http://localhost:8000/internet_store/generate/',
 				headers: {
 				   'Content-Type': 'application/json',
@@ -308,13 +308,13 @@
 		function reloadDeliveries($scope, successCbk, errorCbk){
 
 			$http({
-				method: 'GET',
+				method: 'POST',
 				url: 'http://localhost:8000/internet_store/reload_deliveries/',
 				headers: {
 				   'Content-Type': 'application/json',
 				},
 				data: {
-					'street': $scope.userReloadDeliveries 
+					'user': $scope.userReloadDeliveries
 				}
 			}).then(successCbk, errorCbk); 
 		}
