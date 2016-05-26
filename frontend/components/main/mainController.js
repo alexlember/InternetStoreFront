@@ -210,9 +210,7 @@ internetStoreModule.controller('mainController', ['$scope', '$state', '$http', '
 	  		},
 	  		function (negativeResponse) {
 	  			console.log('http call get generate failed');
-		  		if (negativeResponse.status === 400) {
-	  				$scope.response = negativeResponse.data;
-		  		}
+				$scope.response = negativeResponse.statusText;
 	  		}
   		);
 	};
